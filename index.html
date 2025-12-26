@@ -178,23 +178,23 @@
             <div class="boss-card" onclick="selectBoss(1, this)" style="border-bottom: 4px solid #a0f;">                
                 <div class="card-img" style="color: #a0f;">Ω</div>                
                 <div class="card-name">VOID REAVER</div>                
-                <div class="card-difficulty">Iniciado</div>           
+                <div class="card-difficulty">Iniciado</div>            
             </div>            
             <div class="boss-card" onclick="selectBoss(2, this)" style="border-bottom: 4px solid #ffd700;">                
                 <div class="card-img" style="color: #ffd700;">†</div>                
                 <div class="card-name">GOLDEN ARMIGER</div>                
-                <div class="card-difficulty">Guerreiro</div>           
+                <div class="card-difficulty">Guerreiro</div>            
             </div>            
             <div class="boss-card" onclick="selectBoss(3, this)" style="border-bottom: 4px solid #f03;">                
                 <div class="card-img" style="color: #f03;">🩸</div>                
                 <div class="card-name">CRIMSON OMEN</div>                
-                <div class="card-difficulty">Pesadelo</div>           
+                <div class="card-difficulty">Pesadelo</div>            
             </div>            
             <div class="boss-card" onclick="selectBoss(4, this)" style="border-bottom: 4px solid #0ff;">                
                 <div class="card-img" style="color: #0ff;">⚙️</div>                
                 <div class="card-name">CYBER LICH</div>                
-                <div class="card-difficulty">Deus Ex</div>           
-            </div>       
+                <div class="card-difficulty">Deus Ex</div>            
+            </div>        
         </div>        
         <button id="challenge-btn" onclick="startSelectedBoss()">DESAFIAR</button>        
         <button class="menu-btn" style="margin-top: 20px; width: 200px; padding: 10px;" onclick="closePantheon()">Voltar</button> 
@@ -776,22 +776,37 @@ function spawnEnemiesLogic() {
     if(bossActive || playerHidden) return;
     let chance = Math.random();
     
-    // Configurações de Spawn por Wave (Simplificado)
+    // Wave 1
     if(wave === 1 && frame % 60 === 0) entities.push(new Enemy('cultist'));
+    // Wave 2
     else if(wave === 2 && frame % 45 === 0) entities.push(new Enemy(chance > 0.8 ? 'brute' : 'cultist'));
+    // Wave 4 (Pós-Void Reaver)
+    else if(wave === 4 && frame % 40 === 0) entities.push(new Enemy(chance > 0.7 ? 'brute' : 'cultist'));
+    // Wave 5
     else if(wave === 5 && frame % 35 === 0) {
         let type = 'cultist'; if(chance > 0.9) type = 'stalker'; else if (chance > 0.7) type = 'ritualist'; else if (chance > 0.6) type = 'brute';
         entities.push(new Enemy(type));
     }
-    // MINI ESTÁGIO DE ELITE ANTES DO ARMIGER
+    // Wave 6 (Elite)
     else if(wave === 6 && frame % 40 === 0) {
         let e = new Enemy('brute'); e.color = '#ffd700'; e.hp *= 2; // Elite Brute
         entities.push(e);
     }
-    else if(wave === 9 && frame % 30 === 0) { // Antes do Omen
+    // Wave 8 (Pós-Golden Armiger)
+    else if(wave === 8 && frame % 35 === 0) {
+         entities.push(new Enemy(chance > 0.6 ? 'ritualist' : 'brute'));
+    }
+    // Wave 9
+    else if(wave === 9 && frame % 30 === 0) { 
          entities.push(new Enemy('stalker'));
     }
-    else if(wave === 12 && frame % 25 === 0) { // Antes do Lich
+    // Wave 11 (Pós-Crimson Omen)
+    else if(wave === 11 && frame % 30 === 0) {
+         let types = ['stalker', 'ritualist'];
+         entities.push(new Enemy(types[Math.floor(Math.random()*types.length)]));
+    }
+    // Wave 12
+    else if(wave === 12 && frame % 25 === 0) { 
          let types = ['cultist', 'brute', 'ritualist', 'stalker'];
          entities.push(new Enemy(types[Math.floor(Math.random()*types.length)]));
     }
